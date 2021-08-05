@@ -1,4 +1,4 @@
-# AWS Openvpn Ephemeral Module
+# AWS OpenVPN Ephemeral Module
 
 
 ## Overview
