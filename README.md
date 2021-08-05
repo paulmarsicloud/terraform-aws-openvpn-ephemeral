@@ -45,13 +45,13 @@ To streamline openvpn creation per region, you can add something similar to your
 ```
 export TF_VAR_private_ip=$(curl ipaddr.io)
 
-alias vpn-east-1-up="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; cd <FOLDER CONTAINING LOCAL TERRAFORM CODE e.g. examples/>; terraform init; terraform apply -auto-approve -var=\"region=us-east-1\"; open openvpn.ovpn"
+alias vpn-east-1-up="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; export TF_VAR_region=us-east-1; cd <FOLDER CONTAINING LOCAL TERRAFORM CODE e.g. examples/>; terraform init; terraform apply -auto-approve; open openvpn.ovpn"
 
-alias vpn-east-1-down="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; cd <FOLDER CONTAINING TERRAFORM e.g. examples/>; terraform destroy -auto-approve -var=\"region=us-east-1\";"
+alias vpn-east-1-down="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; cd <FOLDER CONTAINING TERRAFORM e.g. examples/>; terraform destroy -auto-approve;"
 
-alias vpn-west-2-up="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; cd <FOLDER CONTAINING LOCAL TERRAFORM CODE e.g. examples/>; terraform init; terraform apply -auto-approve -var=\"region=us-west-2\"; open openvpn.ovpn"
+alias vpn-west-2-up="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; export TF_VAR_region=us-west-2; cd <FOLDER CONTAINING LOCAL TERRAFORM CODE e.g. examples/>; terraform init; terraform apply -auto-approve -var=\"region=us-west-2\"; open openvpn.ovpn"
 
-alias vpn-west-2-down="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; cd <FOLDER CONTAINING TERRAFORM e.g. examples/>; terraform destroy -auto-approve -var=\"region=us-west-2\";"
+alias vpn-west-2-down="export AWS_PROFILE=<YOUR AWS PROFILE NAME>; cd <FOLDER CONTAINING TERRAFORM e.g. examples/>; terraform destroy -auto-approve;"
 ...
 ```
 
