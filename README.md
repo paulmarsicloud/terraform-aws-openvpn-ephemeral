@@ -11,7 +11,7 @@ The `local-exec` provisioners have logic to download the `openvpn.ovpn` file to 
 
 ## Architecture
 
-![Visual of OpenVPN EC2 Server architecture](https://github.com/paulmarsicloud/terraform-aws-openvpn-ephemeral/blob/main/examples/architecture.png?raw=true)
+![Visual of OpenVPN EC2 Server architecture](https://raw.githubusercontent.com/paulmarsicloud/terraform-aws-openvpn-ephemeral/main/examples/architecture.png)
 
 ## Pre-requisites
 To use this terraform-aws-openvpn-ephemeral module, you will need the following:
