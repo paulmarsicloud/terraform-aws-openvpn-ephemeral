@@ -19,7 +19,7 @@ data "aws_ssm_parameter" "ubuntu_ami" {
 data "aws_caller_identity" "current" {}
 
 data "template_file" "user_data" {
-  template = file("user_data.tpl")
+  template = file("${path.module}/user_data.tpl")
 }
 
 resource "aws_security_group" "openvpn_sg" {
