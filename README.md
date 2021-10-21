@@ -34,6 +34,10 @@ Due to the logic of the local-exec provisioners, currently only a Mac / Linux OS
 ## Usage
 Please review the `examples/main.tf` file for proper module usage.
 
+## GitLab / CircleCI Templates
+Templates for how to use this module with GitLab or CircleCI are available here:
+- [GitLab Template](https://gitlab.com/paulmarsicloud/openvpn-ephemeral-template/)
+- [CircleCI Template](https://github.com/paulmarsicloud/openvpn-ephemeral-circleci-template)
 
 ## Mac OS / ZSH Tips
 To use the `openvpn.ovpn` file easily on Mac, download the [OpenVPN Connect](https://openvpn.net/client-connect-vpn-for-mac-os/) app and open the file to import.
