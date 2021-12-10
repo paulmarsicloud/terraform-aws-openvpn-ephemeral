@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ssm_role" {
-  name = "ssm_role"
+  name = "ssm_role_${var.region}"
 
   assume_role_policy = <<EOF
 {
@@ -20,12 +20,12 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "ssm_profile" {
-  name = "ssm_profile"
+  name = "ssm_profile_${var.region}"
   role = aws_iam_role.ssm_role.name
 }
 
 resource "aws_iam_role_policy" "ssm_policy" {
-  name = "ssm_policy"
+  name = "ssm_policy_${var.region}"
   role = aws_iam_role.ssm_role.id
 
   policy = jsonencode({
