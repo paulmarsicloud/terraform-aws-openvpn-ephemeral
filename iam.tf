@@ -56,13 +56,29 @@ resource "aws_iam_role_policy" "ssm_policy" {
         Effect   = "Allow"
         Resource = "arn:aws:ssm:*:*:session*"
       },
+      # {
+      #   Action = [
+      #     "kms:Decrypt",
+      #     "kms:GenerateDataKey"
+      #   ]
+      #   Effect   = "Allow"
+      #   Resource = "${aws_key_pair.openvpn_key_pair.arn}"
+      # },
       {
         Action = [
-          "kms:Decrypt",
-          "kms:GenerateDataKey"
+          "s3:ListBucket"
         ]
         Effect   = "Allow"
-        Resource = "${aws_key_pair.openvpn_key_pair.arn}"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.openvpn_config_bucket.bucket}"
+      },
+      {
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.openvpn_config_bucket.bucket}/*"
       },
     ]
   })

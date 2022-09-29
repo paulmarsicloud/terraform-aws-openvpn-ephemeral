@@ -1,9 +1,9 @@
 terraform {
-  required_version = ">= 0.14.0"
+  required_version = ">= 1.0.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }
@@ -20,6 +20,9 @@ data "aws_caller_identity" "current" {}
 
 data "template_file" "user_data" {
   template = file("${path.module}/user_data.tpl")
+  vars = {
+    s3_bucket = "${aws_s3_bucket.openvpn_config_bucket.bucket}"
+  }
 }
 
 resource "aws_security_group" "openvpn_sg" {
@@ -40,23 +43,56 @@ resource "aws_security_group" "openvpn_sg" {
   }
 }
 
-resource "tls_private_key" "openvpn_private_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+# resource "tls_private_key" "openvpn_private_key" {
+#   algorithm = "RSA"
+#   rsa_bits  = 4096
+# }
+
+resource "aws_s3_bucket" "openvpn_config_bucket" {
 }
 
-resource "aws_key_pair" "openvpn_key_pair" {
-  key_name   = "openvpn_key_pair_${var.region}"
-  public_key = tls_private_key.openvpn_private_key.public_key_openssh
-  provisioner "local-exec" {
-    command = "cat ${var.output_suppression}; rm -rf ~/.ssh/openvpn_key_pair_${var.region}.pem; echo '${tls_private_key.openvpn_private_key.private_key_pem}' > ~/.ssh/openvpn_key_pair_${var.region}.pem; chmod 400 ~/.ssh/openvpn_key_pair_${var.region}.pem"
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "rm -rf openvpn.ovpn;"
-  }
+resource "aws_s3_bucket_acl" "openvpn_config__acl" {
+  bucket = aws_s3_bucket.openvpn_config_bucket.id
+  acl    = "private"
 }
+
+resource "aws_s3_bucket_policy" "openvpn_config__policy" {
+  bucket = aws_s3_bucket.openvpn_config_bucket.id
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "OpenVPN-Download",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${aws_s3_bucket.openvpn_config_bucket.bucket}/*",
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": [
+                        "${var.public_ip}"
+                    ]
+                }
+                }
+    }
+  ]
+}
+POLICY
+}
+
+# resource "aws_key_pair" "openvpn_key_pair" {
+#   key_name   = "openvpn_key_pair_${var.region}"
+#   public_key = tls_private_key.openvpn_private_key.public_key_openssh
+#   provisioner "local-exec" {
+#     command = "cat ${var.output_suppression}; rm -rf ~/.ssh/openvpn_key_pair_${var.region}.pem; echo '${tls_private_key.openvpn_private_key.private_key_pem}' > ~/.ssh/openvpn_key_pair_${var.region}.pem; chmod 400 ~/.ssh/openvpn_key_pair_${var.region}.pem"
+#   }
+
+#   provisioner "local-exec" {
+#     when    = destroy
+#     command = "rm -rf openvpn.ovpn;"
+#   }
+# }
 
 resource "aws_instance" "openvpn_ephemeral_ec2" {
   ami           = data.aws_ssm_parameter.ubuntu_ami.value
@@ -64,18 +100,18 @@ resource "aws_instance" "openvpn_ephemeral_ec2" {
   tags = {
     Name = "openvpn_ephemeral"
   }
-  iam_instance_profile   = aws_iam_instance_profile.ssm_profile.name
-  key_name               = aws_key_pair.openvpn_key_pair.key_name
+  iam_instance_profile = aws_iam_instance_profile.ssm_profile.name
+  # key_name               = aws_key_pair.openvpn_key_pair.key_name
   vpc_security_group_ids = [aws_security_group.openvpn_sg.id]
 
   user_data = data.template_file.user_data.rendered
 
 }
 
-resource "null_resource" "obtain_ovpn_file" {
-  provisioner "local-exec" {
-    command = "export AWS_DEFAULT_REGION=${var.region}; until ls openvpn.ovpn; do scp -o StrictHostKeyChecking=no -i \"~/.ssh/openvpn_key_pair_${var.region}.pem\" ubuntu@${aws_instance.openvpn_ephemeral_ec2.id}:/tmp/openvpn.ovpn . ; done;"
-  }
+# resource "null_resource" "obtain_ovpn_file" {
+#   provisioner "local-exec" {
+#     command = "export AWS_DEFAULT_REGION=${var.region}; until ls openvpn.ovpn; do scp -o StrictHostKeyChecking=no -i \"~/.ssh/openvpn_key_pair_${var.region}.pem\" ubuntu@${aws_instance.openvpn_ephemeral_ec2.id}:/tmp/openvpn.ovpn . ; done;"
+#   }
 
-}
+# }
 

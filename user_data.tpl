@@ -6,4 +6,4 @@ APPROVE_INSTALL=y ENDPOINT=$(curl -4 ifconfig.co) APPROVE_IP=y IPV6_SUPPORT=n PO
 mv /root/openvpn.ovpn /tmp/
 chown ubuntu: /tmp/openvpn.ovpn
 chmod 777 /tmp/openvpn.ovpn
-sudo snap start amazon-ssm-agent
+aws s3 cp /tmp/openvpn.ovpn s3://${s3_bucket}/
