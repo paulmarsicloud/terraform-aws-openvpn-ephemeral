@@ -1,5 +1,5 @@
-resource "aws_iam_role" "ssm_role" {
-  name = "ssm_role_${var.region}"
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2_role_${var.region}"
 
   assume_role_policy = <<EOF
 {
@@ -19,50 +19,33 @@ EOF
 
 }
 
-resource "aws_iam_instance_profile" "ssm_profile" {
-  name = "ssm_profile_${var.region}"
-  role = aws_iam_role.ssm_role.name
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2_profile_${var.region}"
+  role = aws_iam_role.ec2_role.name
 }
 
-resource "aws_iam_role_policy" "ssm_policy" {
-  name = "ssm_policy_${var.region}"
-  role = aws_iam_role.ssm_role.id
+resource "aws_iam_role_policy" "ec2_policy" {
+  name = "ec2_policy_${var.region}"
+  role = aws_iam_role.ec2_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Action = [
-          "ssm:UpdateInstanceInformation",
-          "ssmmessages:CreateControlChannel",
-          "ssmmessages:CreateDataChannel",
-          "ssmmessages:OpenControlChannel",
-          "ssmmessages:OpenDataChannel",
-          "ssm:DescribeSessions",
-          "ssm:GetConnectionStatus",
-          "ssm:DescribeInstanceProperties",
-          "ec2:DescribeInstances",
-          "s3:GetEncryptionConfiguration",
-          "ssm:StartSession"
+          "s3:ListBucket"
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.openvpn_config_bucket.bucket}"
       },
       {
         Action = [
-          "ssm:TerminateSession",
-          "ssm:ResumeSession"
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:ssm:*:*:session*"
-      },
-      {
-        Action = [
-          "kms:Decrypt",
-          "kms:GenerateDataKey"
-        ]
-        Effect   = "Allow"
-        Resource = "${aws_key_pair.openvpn_key_pair.arn}"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.openvpn_config_bucket.bucket}/*"
       },
     ]
   })
