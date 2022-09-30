@@ -4,13 +4,6 @@ variable "instance_type" {
   default     = "t4g.micro"
 }
 
-variable "output_suppression" {
-  type        = string
-  description = "this is an unused variable, referenced purely to suppress the tls key echo from the provisioner command line outputs"
-  sensitive   = true
-  default     = "secret"
-}
-
 variable "public_ip" {
   type        = string
   description = "user's personal public ip to access ec2 instance"

@@ -10,7 +10,7 @@ The `local-exec` provisioner downloads the `openvpn.ovpn` file to the user's mac
 
 ## Architecture
 
-![Visual of OpenVPN EC2 Server architecture](https://raw.githubusercontent.com/paulmarsicloud/terraform-aws-openvpn-ephemeral/main/examples/architecture.png)
+![Visual of OpenVPN EC2 Server architecture](./architecture.png)
 
 ## Pre-requisites
 
@@ -18,16 +18,19 @@ To use this terraform-aws-openvpn-ephemeral module, you will need the following:
 
 ```
 - AWS Account
+- Default VPC in region you are using for VPN
 - Terraform 1.0.0+
 - Terragrunt 0.39.0+
 - Mac / Linux OS
 ```
 
+Creation of the default VPC can be achieved run running: `aws ec2 create-default-vpc --region <ENTER TARGET REGION HERE>`
+
 Due to the logic of the local-exec provisioners, currently only a Mac / Linux OS are currently supported. Please submit a pull request for additional OS support.
 
 ## Usage
 
-Please review the `examples/main.tf` file for proper module usage. Terragrunt is preferred as to easily create a S3/DynamoDB shared state backend, rather than a local terraform state.
+Please review the `examples` folder for proper module usage. Terragrunt is preferred as to easily create a S3/DynamoDB shared state backend, rather than a local terraform state.
 
 ## GitLab / CircleCI Templates
 
