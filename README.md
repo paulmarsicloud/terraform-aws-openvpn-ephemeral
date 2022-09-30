@@ -10,7 +10,7 @@ The `local-exec` provisioner downloads the `openvpn.ovpn` file to the user's mac
 
 ## Architecture
 
-![Visual of OpenVPN EC2 Server architecture](https://github.com/paulmarsicloud/terraform-aws-openvpn-ephemeral/raw/main/architecture.png)
+![Visual of OpenVPN EC2 Server architecture](https://github.com/paulmarsicloud/terraform-aws-openvpn-ephemeral/raw/main/examples/architecture.png)
 
 ## Pre-requisites
 
