@@ -32,14 +32,15 @@ Due to the logic of the local-exec provisioners, currently only a Mac / Linux OS
 
 Please review the `examples` folder for proper module usage. Terragrunt is preferred as to easily create a S3/DynamoDB shared state backend, rather than a local terraform state.
 
-## GitLab / CircleCI Templates
+## CICD Templates
 
-Templates for how to use this module with GitLab or CircleCI are available here:
+Templates for how to use this module with GitLab. CircleCI or GitHub Actions are available here:
 
 - [GitLab Template](https://gitlab.com/paulmarsicloud/openvpn-ephemeral-template/)
 - [CircleCI Template](https://github.com/paulmarsicloud/openvpn-ephemeral-circleci-template)
+- [GitHub Actions](https://github.com/paulmarsicloud/openvpn-ephemeral-github-actions-template)
 
-## Mac OS / Bash/ZSH Tips
+## MacOS / Bash/ZSH Tips
 
 To use the `openvpn.ovpn` file easily on Mac, download the [OpenVPN Connect](https://openvpn.net/client-connect-vpn-for-mac-os/) app and open the file to import.
 
