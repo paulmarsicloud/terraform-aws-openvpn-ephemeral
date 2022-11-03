@@ -39,6 +39,7 @@ Templates for how to use this module with GitLab. CircleCI or GitHub Actions are
 - [GitLab Template](https://gitlab.com/paulmarsicloud/openvpn-ephemeral-template/)
 - [CircleCI Template](https://github.com/paulmarsicloud/openvpn-ephemeral-circleci-template)
 - [GitHub Actions](https://github.com/paulmarsicloud/openvpn-ephemeral-github-actions-template)
+- [Jenkins](https://github.com/paulmarsicloud/openvpn-ephemeral-jenkins-template)
 
 ## MacOS / Bash/ZSH Tips
 
