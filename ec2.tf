@@ -2,12 +2,6 @@ data "aws_ssm_parameter" "ubuntu_ami" {
   name = "/aws/service/canonical/ubuntu/server/20.04/stable/current/arm64/hvm/ebs-gp2/ami-id"
 }
 
-data "template_file" "user_data" {
-  template = file("${path.module}/user_data.tpl")
-  vars = {
-    s3_bucket = "${aws_s3_bucket.openvpn_config_bucket.bucket}"
-  }
-}
 
 resource "aws_security_group" "openvpn_sg" {
   name = "openvpn_sg"
@@ -36,7 +30,9 @@ resource "aws_instance" "openvpn_ephemeral_ec2" {
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   vpc_security_group_ids = [aws_security_group.openvpn_sg.id]
 
-  user_data = data.template_file.user_data.rendered
+  user_data = templatefile("${path.module}/user_data.tpl", {
+    s3_bucket = "${aws_s3_bucket.openvpn_config_bucket.bucket}"
+  })
 }
 
 resource "null_resource" "obtain_ovpn_file" {
